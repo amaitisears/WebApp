@@ -14,9 +14,8 @@ pipeline{
         stage("Static Code Analysis - SonarQube") {
             agent any
             steps {
-                withSonarQubeEnv('sonarqube') {
-                  //echo "Hello"
-                  sh 'mvn sonar:sonar -Dsonar.host.url=http://13.66.197.145:9000/ -Dsonar.login=bc7ef5c9ec9a53917e38aa8b81ae0f73b5d04a86 -Dsonar.sources=. -Dsonar.tests=. -Dsonar.test.inclusions=**/test/java/servlet/createpage_junit.java -Dsonar.exclusions=**/test/java/servlet/createpage_junit.java'
+                withSonarQubeEnv(credentialsId: 'sonartoken-latest', installationName: 'sonarqube') {
+					sh 'mvn sonar:sonar -Dsonar.host.url=http://13.66.197.145:9000 -Dsonar.sources=. -Dsonar.tests=. -Dsonar.test.inclusions=**/test/java/servlet/createpage_junit.java -Dsonar.exclusions=**/test/java/servlet/createpage_junit.java'
                 }
             }
         }
