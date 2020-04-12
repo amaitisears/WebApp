@@ -33,6 +33,13 @@ pipeline{
             }
         }
         
+        stage("Performance Test - Quality - Blazemeter"){
+            steps{
+                blazeMeterTest credentialsId: 'Blazemeter', testId: '7892218.taurus', workspaceId: '475066'      
+                // blazeMeterTest credentialsId: 'Blazemeter', testId: '7913784.taurus', workspaceId: '480055'     
+            }
+        }
+        
         stage("Deploy to Prod - tomcat"){
             steps{
                 sh 'mvn clean package'
