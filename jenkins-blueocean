@@ -4,6 +4,22 @@ pipeline{
         maven 'maven'
     }
     
+     rtMavenResolver (
+        id: 'resolver-unique-id',
+        serverId: 'artifactory',
+        releaseRepo: 'devopstoronto-release',
+        snapshotRepo: 'devopstoronto-snapshot'
+    )  
+ 
+    rtMavenDeployer (
+        id: 'deployer-unique-id',
+        serverId: 'artifactory',
+        releaseRepo: 'devopstoronto-release-local',
+        snapshotRepo: 'devopstoronto-snapshot-local',
+        // By default, 3 threads are used to upload the artifacts to Artifactory. You can override this default by setting:
+        threads: 6
+    ) 
+
     stages{
         stage("Source Control -Git Checkout"){
             steps{
@@ -26,37 +42,21 @@ pipeline{
             }
         }
         stage('Binary Upload - Artifactory') {
-        
-            rtMavenResolver (
-                id: 'resolver-unique-id',
-                serverId: 'artifactory',
-                releaseRepo: 'devopstoronto-release',
-                snapshotRepo: 'devopstoronto-snapshot'
-            )  
- 
-            rtMavenDeployer (
-                id: 'deployer-unique-id',
-                serverId: 'artifactory',
-                releaseRepo: 'devopstoronto-release-local',
-                snapshotRepo: 'devopstoronto-snapshot-local',
-                // By default, 3 threads are used to upload the artifacts to Artifactory. You can override this default by setting:
-                threads: 6
-            )         
-            
-            rtMavenRun (
-                // Tool name from Jenkins configuration.
-                //tool: MAVEN_TOOL,
-                pom: 'pom.xml',
-                goals: 'clean install',
-                // Maven options.
-                opts: '-Xms1024m -Xmx4096m',
-                resolverId: 'resolver-unique-id',
-                deployerId: 'deployer-unique-id',
-                // If the build name and build number are not set here, the current job name and number will be used:
-                //buildName: 'my-build-name',
-                //buildNumber: '17'
-            )
-      
+            steps {       
+                rtMavenRun (
+                    // Tool name from Jenkins configuration.
+                    //tool: MAVEN_TOOL,
+                    pom: 'pom.xml',
+                    goals: 'clean install',
+                    // Maven options.
+                    opts: '-Xms1024m -Xmx4096m',
+                    resolverId: 'resolver-unique-id',
+                    deployerId: 'deployer-unique-id',
+                    // If the build name and build number are not set here, the current job name and number will be used:
+                    //buildName: 'my-build-name',
+                    //buildNumber: '17'
+                )
+            }
         }
     }
 }
