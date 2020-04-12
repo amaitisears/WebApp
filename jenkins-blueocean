@@ -4,10 +4,6 @@ pipeline{
         maven 'maven'
     }
     
-    def server = Artifactory.server "artifactory"
-    def rtMaven = Artifactory.newMavenBuild()
-    rtMaven.tool = "maven"
-    
     stages{
         stage("Source Control -Git Checkout"){
             steps{
