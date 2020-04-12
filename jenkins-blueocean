@@ -14,8 +14,7 @@ pipeline{
          stage("Compile - Maven") {
             agent any
             steps {
-                echo '${env.JOB_NAME} ${env.BUILD_NUMBER}'
-                slackSend channel: 'devopsbootcamp', color: 'good', message: 'Build Started: ${env.JOB_NAME} ${env.BUILD_NUMBER}', teamDomain: 'devopsbootcampworld', tokenCredentialId: 'slack'                
+                slackSend channel: 'devopsbootcamp', color: 'good', message: 'Build Started: ${currentBuild.projectName} ${currentBuild.number}', teamDomain: 'devopsbootcampworld', tokenCredentialId: 'slack'                
                 sh 'mvn clean install'
                
             }
