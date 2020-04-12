@@ -3,6 +3,11 @@ pipeline{
     tools {
         maven 'maven'
     }
+    
+    def server = Artifactory.server "artifactory"
+    def rtMaven = Artifactory.newMavenBuild()
+    rtMaven.tool = "maven"
+    
     stages{
         stage("Source Control -Git Checkout"){
             steps{
@@ -23,6 +28,12 @@ pipeline{
                sh 'mvn clean install'
                
             }
+        }
+        stage('Binary Upload - Artifactory') {
+       
+            rtMaven.tool = "maven"
+            rtMaven.deployer releaseRepo:'devopstoronto-release-local', snapshotRepo:'devopstoronto-snapshot-local', server: server
+            rtMaven.resolver releaseRepo:'devopstoronto-release', snapshotRepo:'devopstoronto-snapshot', server: server
         }
     }
 }
