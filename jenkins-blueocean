@@ -17,14 +17,19 @@ pipeline{
                sh 'mvn clean install'
                
             }
-        }
-        
-        
+        }   
         
         stage("Deploy to QA - tomcat"){
             steps{
                 sh 'mvn clean package'
                 deploy adapters: [tomcat7(credentialsId: 'tomcat', path: '', url: 'http://18.218.122.189:8080/')], contextPath: '/QAWebapp', onFailure: false, war: '**/*.war'
+            }
+        }
+        
+        stage("Deploy to Prod - tomcat"){
+            steps{
+                sh 'mvn clean package'
+                deploy adapters: [tomcat7(credentialsId: 'tomcat', path: '', url: 'http://3.134.101.93:8080/')], contextPath: '/QAWebapp', onFailure: false, war: '**/*.war'
             }
         }
     }
