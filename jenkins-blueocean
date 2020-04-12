@@ -46,5 +46,12 @@ pipeline{
                 deploy adapters: [tomcat7(credentialsId: 'tomcat', path: '', url: 'http://3.134.101.93:8080/')], contextPath: '/QAWebapp', onFailure: false, war: '**/*.war'
             }
         }
+        
+        stage("Sanity Test - Quality - Selenium"){
+            steps{
+                sh 'mvn clean package -f Acceptancetest/pom.xml'
+                publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '\\Acceptancetest\\target\\surefire-reports', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: ''])               
+            }
+        }
     }
 }
