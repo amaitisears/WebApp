@@ -4,22 +4,6 @@ pipeline{
         maven 'maven'
     }
     
-     rtMavenResolver (
-        id: 'resolver-unique-id',
-        serverId: 'artifactory',
-        releaseRepo: 'devopstoronto-release',
-        snapshotRepo: 'devopstoronto-snapshot'
-    )  
- 
-    rtMavenDeployer (
-        id: 'deployer-unique-id',
-        serverId: 'artifactory',
-        releaseRepo: 'devopstoronto-release-local',
-        snapshotRepo: 'devopstoronto-snapshot-local',
-        // By default, 3 threads are used to upload the artifacts to Artifactory. You can override this default by setting:
-        threads: 6
-    ) 
-
     stages{
         stage("Source Control -Git Checkout"){
             steps{
@@ -43,6 +27,22 @@ pipeline{
         }
         stage('Binary Upload - Artifactory') {
             steps {       
+                 rtMavenResolver (
+                    id: 'resolver-unique-id',
+                    serverId: 'artifactory',
+                    releaseRepo: 'devopstoronto-release',
+                    snapshotRepo: 'devopstoronto-snapshot'
+                )  
+
+                rtMavenDeployer (
+                    id: 'deployer-unique-id',
+                    serverId: 'artifactory',
+                    releaseRepo: 'devopstoronto-release-local',
+                    snapshotRepo: 'devopstoronto-snapshot-local',
+                    // By default, 3 threads are used to upload the artifacts to Artifactory. You can override this default by setting:
+                    threads: 6
+                ) 
+                
                 rtMavenRun (
                     // Tool name from Jenkins configuration.
                     //tool: MAVEN_TOOL,
