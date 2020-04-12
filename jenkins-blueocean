@@ -29,6 +29,33 @@ pipeline{
             }
         }   
         
+        stage('Binary Upload - Artifactory') {
+            steps {       
+                 rtMavenResolver (
+                    id: 'resolver-artifactory-id',
+                    serverId: 'artifactory',
+                    releaseRepo: 'devopstoronto-release',
+                    snapshotRepo: 'devopstoronto-snapshot'
+                )  
+
+                rtMavenDeployer (
+                    id: 'deployer-artifactory-id',
+                    serverId: 'artifactory',
+                    releaseRepo: 'devopstoronto-release-local',
+                    snapshotRepo: 'devopstoronto-snapshot-local',
+                    threads: 6
+                ) 
+
+                rtMavenRun (
+                    pom: 'pom.xml',
+                    goals: 'clean install',
+                    opts: '-Xms1024m -Xmx4096m',
+                    resolverId: 'resolver-artifactory-id',
+                    deployerId: 'deployer-artifactory-id',
+                )
+            }
+        }
+        
         stage("Deploy to QA - tomcat"){
             steps{
                 sh 'mvn clean package'
