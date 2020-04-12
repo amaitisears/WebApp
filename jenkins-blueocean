@@ -15,7 +15,7 @@ pipeline{
             agent any
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh 'mvn sonar:sonar -Dsonar.host.url=http://13.66.197.145:9000 -Dsonar.login=sonartoken-jenkins -Dsonar.sources=. -Dsonar.tests=. -Dsonar.test.inclusions=**/test/java/servlet/createpage_junit.java -Dsonar.exclusions=**/test/java/servlet/createpage_junit.java'
+                    sh 'mvn sonar:sonar -Dsonar.host.url=http://13.66.197.145:9000 -Dsonar.login=7465e2d83214004830e044870104a3c56edbb714 -Dsonar.password='' -Dsonar.sources=. -Dsonar.tests=. -Dsonar.test.inclusions=**/test/java/servlet/createpage_junit.java -Dsonar.exclusions=**/test/java/servlet/createpage_junit.java'
                 }
             }
         }
